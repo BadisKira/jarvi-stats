@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { NhostClient, NhostProvider } from '@nhost/react'
+import {BrowserRouter} from "react-router-dom"
 import CustomApolloProvider from './components/CustomApolloProvider.tsx'
 
 export const nhost = new NhostClient({
@@ -12,10 +13,12 @@ export const nhost = new NhostClient({
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <BrowserRouter>
     <NhostProvider nhost={nhost}>
       <CustomApolloProvider>
         <App />
       </CustomApolloProvider>
     </NhostProvider>
+    </BrowserRouter>
   </StrictMode>,
 )
