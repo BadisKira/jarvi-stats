@@ -1,4 +1,3 @@
-import './App.css'
 import PageStatistics from './pages/statistiques';
 import { Route, Routes } from 'react-router-dom';
 import PageHome from './pages/home';

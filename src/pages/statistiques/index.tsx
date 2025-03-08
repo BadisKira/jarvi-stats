@@ -1,9 +1,27 @@
-import { getStatistics } from "@/lib/queries"
-import { useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client";
+import Filters from "./filters";
+import { FilterProvider, useFilter } from "@/context/filterContext";
+import { getStatistics } from "@/lib/queries";
+import { convertToTimestampz } from "@/lib/utils";
 
 export default function PageStatistics() {
+    return (
+        <FilterProvider>
+            <div className="">
+                <Filters handleSubmit={() => { }} />
+                <StatisticsSection />
+            </div>
+        </FilterProvider>
+    )
+};
+
+
+
+
+const StatisticsSection = () => {
+    const { dateRange } = useFilter();
     const { data, loading, error } = useQuery(getStatistics({
-        endDate: "2025-01-01T00:00:00Z", messageType: "LINKEDIN_MESSAGE_SENT", startDate: "2024-01-31T23:59:59Z"
+        endDate: convertToTimestampz(dateRange?.to?.toString()), messageType: ["LINKEDIN_MESSAGE_SENT"], startDate: convertToTimestampz(dateRange?.from?.toString())
     }));
 
     if (loading) {
@@ -18,10 +36,9 @@ export default function PageStatistics() {
         </div>
     }
     console.log(data)
-    return (
 
-        <div>
-            YES WE GOT THE DATA
-        </div>
-    )
+    return <>
+        <pre>{JSON.stringify(data)}</pre>
+    </>
 }
+
