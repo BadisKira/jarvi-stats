@@ -78,10 +78,10 @@ function PeriodeSelect({ onPeriodChange }: PeriodeSelectProps) {
 
     return (
         <Select value={selected} onValueChange={handleValueChange}>
-            <SelectTrigger className="w-[180px] bg-white" >
-                <SelectValue placeholder="Sélectionnez une période" className="bg-white" />
+            <SelectTrigger className="w-[250px] shadow-accent-foreground " style={{ background: "white" }} >
+                <SelectValue placeholder="Sélectionnez une période" className="" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="w-[350px]">
                 {periodeOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                         {option.label}
@@ -104,21 +104,21 @@ export default function Filters({ handleSubmit }: { handleSubmit: () => void }) 
     };
 
     return (
-        <div className="flex gap-4  items-center mb-2 flex-wrap">
+        <div className="flex gap-4  items-center mb-2 flex-wrap ">
             <PeriodeSelect onPeriodChange={handlePeriodChange} />
             <DatePickerWithRange date={dateRange} setDate={setDateRange} />
             <div className="flex gap-2">
                 <div className="flex items-center space-x-2">
-                    <Checkbox id="automatique" />
+                    <input type="checkbox" id="automatique" className="w-4 h-4" style={{ background: "#f1f1f1 !important" }} />
                     <Label htmlFor="automatique">Automatique</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <Checkbox id="manuel" />
+                    <input type="checkbox" id="manuel" className="w-4 h-4" />
+
                     <Label htmlFor="manuel">Manuel</Label>
                 </div>
             </div>
             <SelectStatistiqueTypes />
-            <Button className="ml-auto" onClick={handleSubmit}>Filtrer</Button>
         </div>
     );
 }
@@ -144,7 +144,7 @@ export function SelectStatistiqueTypes() {
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[240px] justify-between">
+                <Button variant="outline" className="w-[240px] justify-between shadow-accent-foreground" style={{ background: "white" }}>
                     Select actions
                     <ChevronsUpDown className="ml-2 h-4 w-4" />
                 </Button>
