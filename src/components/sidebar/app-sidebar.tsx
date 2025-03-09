@@ -1,17 +1,11 @@
-"use client";
 import {
   Brain,
-  HammerIcon,
-  Sparkles,
-  FileText,
   Home,
-  Voicemail,
 } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,

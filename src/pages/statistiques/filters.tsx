@@ -33,6 +33,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useFilter } from "@/context/filterContext";
 import { StatsType, StatsTypeArray } from "@/types/statistiques";
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { getDisplayName } from "@/lib/utils";
 
 
 
@@ -77,8 +78,8 @@ function PeriodeSelect({ onPeriodChange }: PeriodeSelectProps) {
 
     return (
         <Select value={selected} onValueChange={handleValueChange}>
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sélectionnez une période" />
+            <SelectTrigger className="w-[180px] bg-white" >
+                <SelectValue placeholder="Sélectionnez une période" className="bg-white" />
             </SelectTrigger>
             <SelectContent>
                 {periodeOptions.map((option) => (
@@ -103,7 +104,7 @@ export default function Filters({ handleSubmit }: { handleSubmit: () => void }) 
     };
 
     return (
-        <div className="flex gap-4 h-10 items-center mb-2">
+        <div className="flex gap-4  items-center mb-2 flex-wrap">
             <PeriodeSelect onPeriodChange={handlePeriodChange} />
             <DatePickerWithRange date={dateRange} setDate={setDateRange} />
             <div className="flex gap-2">
@@ -127,11 +128,12 @@ export default function Filters({ handleSubmit }: { handleSubmit: () => void }) 
 
 export function SelectStatistiqueTypes() {
     const [open, setOpen] = useState(false);
-    const {selectedTypes, setSelectedTypes} = useFilter();
+    const { selectedTypes, setSelectedTypes } = useFilter();
 
     const toggleSelection = (value: StatsType) => {
         if (selectedTypes.includes(value)) {
-            setSelectedTypes(selectedTypes.filter((item) => item !== value));
+            if (selectedTypes.length > 1)
+                setSelectedTypes(selectedTypes.filter((item) => item !== value));
         } else {
             setSelectedTypes([...selectedTypes, value]);
         }
@@ -161,7 +163,7 @@ export function SelectStatistiqueTypes() {
                                     <Check
                                         className={`mr-2 h-4 w-4 ${selectedTypes.includes(option) ? "opacity-100" : "opacity-0"}`}
                                     />
-                                    {option}
+                                    {getDisplayName(option)}
                                 </CommandItem>
                             ))}
                         </ScrollArea>

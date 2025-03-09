@@ -1,15 +1,27 @@
-import { useQuery } from "@apollo/client";
 import Filters from "./filters";
-import { FilterProvider, useFilter } from "@/context/filterContext";
-import { getStatistics } from "@/lib/queries";
-import { convertToTimestampz } from "@/lib/utils";
+import { FilterProvider} from "@/context/filterContext";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SectionTable from "@/components/table/SectionTable";
+import StatisticsSection from "@/components/charts/StatistiqueChart";
 
 export default function PageStatistics() {
     return (
         <FilterProvider>
-            <div className="">
+            <div className="flex flex-col gap-10">
                 <Filters handleSubmit={() => { }} />
-                <StatisticsSection />
+                <Tabs defaultValue="tabs" className="w-full">
+                    <TabsList>
+                        <TabsTrigger value="tabs">Les tableaux</TabsTrigger>
+                        <TabsTrigger value="charts">les chatas</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="tabs">
+                        <SectionTable />
+                    </TabsContent>
+                    <TabsContent value="charts">
+                        <StatisticsSection />
+                    </TabsContent>
+                </Tabs>
+
             </div>
         </FilterProvider>
     )
@@ -17,28 +29,4 @@ export default function PageStatistics() {
 
 
 
-
-const StatisticsSection = () => {
-    const { dateRange } = useFilter();
-    const { data, loading, error } = useQuery(getStatistics({
-        endDate: convertToTimestampz(dateRange?.to?.toString()), messageType: ["LINKEDIN_MESSAGE_SENT"], startDate: convertToTimestampz(dateRange?.from?.toString())
-    }));
-
-    if (loading) {
-        return <div>
-            Loading data ...
-        </div>
-    }
-    if (error) {
-        console.log(error)
-        return <div>
-            Une erreur a survenue
-        </div>
-    }
-    console.log(data)
-
-    return <>
-        <pre>{JSON.stringify(data)}</pre>
-    </>
-}
 

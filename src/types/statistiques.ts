@@ -1,44 +1,23 @@
-//export type StatsType = 'LINKEDIN_MESSAGE_SENT'|'LINKEDIN_INMAIL_SENT'|'EMAIL_SENT'
-
-
 export type StatsType =
-    | "SOURCED"
-    | "CONNECT"
     | "EVENT_SCHEDULED"
     | "EMAIL_SENT"
-    | "EMAIL_RECEIVED"
     | "LINKEDIN_MESSAGE_SENT"
-    | "LINKEDIN_MESSAGE_RECEIVED"
     | "LINKEDIN_INMAIL_SENT"
-    | "LINKEDIN_INMAIL_RECEIVED"
     | "LINKEDIN_INVITATION_SENT"
-    | "LINKEDIN_PROFILE_VIEW"
     | "PHONECALL"
-    | "PHONECALL_MISSED"
     | "SMS_SENT"
-    | "SMS_RECEIVED"
-    | "JOB_APPLICATION"
-    | "OTHER";
+    | "JOB_APPLICATION";
 
 
 export enum StatsTypeEnum {
-    SOURCED = "SOURCED",
-    CONNECT = "CONNECT",
     EVENT_SCHEDULED = "EVENT_SCHEDULED",
     EMAIL_SENT = "EMAIL_SENT",
-    EMAIL_RECEIVED = "EMAIL_RECEIVED",
     LINKEDIN_MESSAGE_SENT = "LINKEDIN_MESSAGE_SENT",
-    LINKEDIN_MESSAGE_RECEIVED = "LINKEDIN_MESSAGE_RECEIVED",
     LINKEDIN_INMAIL_SENT = "LINKEDIN_INMAIL_SENT",
-    LINKEDIN_INMAIL_RECEIVED = "LINKEDIN_INMAIL_RECEIVED",
     LINKEDIN_INVITATION_SENT = "LINKEDIN_INVITATION_SENT",
-    LINKEDIN_PROFILE_VIEW = "LINKEDIN_PROFILE_VIEW",
     PHONECALL = "PHONECALL",
-    PHONECALL_MISSED = "PHONECALL_MISSED",
     SMS_SENT = "SMS_SENT",
-    SMS_RECEIVED = "SMS_RECEIVED",
     JOB_APPLICATION = "JOB_APPLICATION",
-    OTHER = "OTHER",
 }
 
 export const StatsTypeArray: StatsType[] = Object.keys(StatsTypeEnum) as StatsType[];
@@ -50,4 +29,17 @@ export type StatsRequest = {
     messageType: [StatsType],
     startDate: string,
     endDate: string
+}
+
+
+export type BasicStatsData = {
+    nombre_lectures_actuel: number
+    nombre_lectures_precedent: number
+    nombre_messages_actuel: number
+    nombre_messages_precedent: number
+    nombre_reponses_actuel: number
+    nombre_reponses_precedent: number
+    temps_moyen_reponse_actuel: number | null
+    temps_moyen_reponse_precedent: number | null
+    type: string
 }
