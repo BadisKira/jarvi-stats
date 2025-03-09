@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DatePickerWithRange } from "@/components/ui/datePickerWithRange";
-import { Label } from "@/components/ui/label";
+import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import {
     Select,
     SelectContent,
@@ -11,7 +9,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+
 const periodeOptions = [
+    { label: "Aucun", value: "null" },
     { label: "1 Jour", value: "1 day" },
     { label: "1 Semaine", value: "1 week" },
     { label: "1 Mois", value: "1 month" },
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useFilter } from "@/context/filterContext";
-import { StatsType, StatsTypeArray } from "@/types/statistiques";
+import { PreDefinedPeriodOptions, StatsType, StatsTypeArray } from "@/types/statistiques";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { getDisplayName } from "@/lib/utils";
 
@@ -44,12 +44,17 @@ interface PeriodeSelectProps {
 
 
 function PeriodeSelect({ onPeriodChange }: PeriodeSelectProps) {
-    const [selected, setSelected] = useState("1 day");
+    const {selectedPredefinedPeriod,setSelectedPredefinedPeriod} = useFilter();
 
-    const handleValueChange = (value: string) => {
-        setSelected(value);
+    const handleValueChange = (value: PreDefinedPeriodOptions) => {
+        setSelectedPredefinedPeriod(value);
+        localStorage.setItem('period-selected', value);
+        if(value == "null"){
+            return;
+        }
         const to = new Date();
         const from = new Date(to);
+
 
         switch (value) {
             case "1 day":
@@ -77,9 +82,9 @@ function PeriodeSelect({ onPeriodChange }: PeriodeSelectProps) {
     };
 
     return (
-        <Select value={selected} onValueChange={handleValueChange}>
-            <SelectTrigger className="w-[250px] shadow-accent-foreground " style={{ background: "white" }} >
-                <SelectValue placeholder="Sélectionnez une période" className="" />
+        <Select value={selectedPredefinedPeriod} onValueChange={handleValueChange}>
+            <SelectTrigger className="w-[250px] " >
+                <SelectValue placeholder="Sélectionnez une période" />
             </SelectTrigger>
             <SelectContent className="w-[350px]">
                 {periodeOptions.map((option) => (
@@ -89,37 +94,6 @@ function PeriodeSelect({ onPeriodChange }: PeriodeSelectProps) {
                 ))}
             </SelectContent>
         </Select>
-    );
-}
-
-export default function Filters({ handleSubmit }: { handleSubmit: () => void }) {
-    const { dateRange, setDateRange } = useFilter();
-
-    const handlePeriodChange = (newRange: DateRange) => {
-        setDateRange(newRange);
-    };
-
-    const handleDatePickerChange = (newRange: DateRange) => {
-        setDateRange(newRange);
-    };
-
-    return (
-        <div className="flex gap-4  items-center mb-2 flex-wrap ">
-            <PeriodeSelect onPeriodChange={handlePeriodChange} />
-            <DatePickerWithRange date={dateRange} setDate={setDateRange} />
-            <div className="flex gap-2">
-                <div className="flex items-center space-x-2">
-                    <input type="checkbox" id="automatique" className="w-4 h-4" style={{ background: "#f1f1f1 !important" }} />
-                    <Label htmlFor="automatique">Automatique</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <input type="checkbox" id="manuel" className="w-4 h-4" />
-
-                    <Label htmlFor="manuel">Manuel</Label>
-                </div>
-            </div>
-            <SelectStatistiqueTypes />
-        </div>
     );
 }
 
@@ -139,13 +113,12 @@ export function SelectStatistiqueTypes() {
         }
     };
 
-    console.log(StatsTypeArray)
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[240px] justify-between shadow-accent-foreground" style={{ background: "white" }}>
-                    Select actions
+                <Button variant="outline" className="w-[240px] justify-between" >
+                    Choisir les types à suivre
                     <ChevronsUpDown className="ml-2 h-4 w-4" />
                 </Button>
             </PopoverTrigger>
@@ -173,3 +146,24 @@ export function SelectStatistiqueTypes() {
         </Popover>
     );
 }
+
+
+
+
+export default function Filters() {
+    const { dateRange, setDateRange } = useFilter();
+
+    const handlePeriodChange = (newRange: DateRange) => {
+        setDateRange(newRange);
+    };
+
+
+    return (
+        <div className="flex gap-4  items-center mb-2 flex-wrap ">
+            <PeriodeSelect onPeriodChange={handlePeriodChange} />
+            <DatePickerWithRange date={dateRange} setDate={setDateRange}  />
+            <SelectStatistiqueTypes />
+        </div>
+    );
+}
+

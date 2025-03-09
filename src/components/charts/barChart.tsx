@@ -16,7 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { getDisplayName } from "@/lib/utils"
+import { calcPreviousPeriod, getDisplayName } from "@/lib/utils"
 import { BasicStatsData, StatsType } from "@/types/statistiques"
 import { DateRange } from "react-day-picker"
 
@@ -25,7 +25,6 @@ import { DateRange } from "react-day-picker"
 interface ChartBarProps {
   data: BasicStatsData
   periodCurrent: DateRange
-  periodPrevious: DateRange
 }
 
 const chartConfig: ChartConfig = {
@@ -44,8 +43,8 @@ function calculateDifference(actuel: number, precedent: number): number | null {
   return ((actuel - precedent) / precedent) * 100
 }
 
-export function ChartBar({ data, periodCurrent, periodPrevious }: ChartBarProps) {
-  // Transformation de l'objet de données en format adapté au BarChart
+export function ChartBar({ data, periodCurrent }: ChartBarProps) {
+  const periodPrevious = calcPreviousPeriod(periodCurrent);
   const chartData = [
     {
       indicateur: "Messages",
@@ -58,19 +57,29 @@ export function ChartBar({ data, periodCurrent, periodPrevious }: ChartBarProps)
       precedent: data.nombre_reponses_precedent,
     },
     {
-      indicateur: "Lectures",
-      actuel: data.nombre_lectures_actuel,
-      precedent: data.nombre_lectures_precedent,
+      indicateur: "Manuellement crée",
+      actuel: data.nombre_manually_created_actuel,
+      precedent: data.nombre_manually_created_precedent,
     },
   ]
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{getDisplayName(data.type as StatsType) }</CardTitle>
-        <CardDescription>
-          Actuel : {periodCurrent.from?.toISOString()} au {periodCurrent.to?.toUTCString()} | Précédent : {periodPrevious.from?.toString()} au {periodPrevious.to?.toLocaleString()}
+        <CardTitle>{getDisplayName(data.type as StatsType)}</CardTitle>
+        <CardDescription className="text-sm text-gray-500">
+          <div className="flex flex-col space-y-1">
+            <span>
+              <span className="font-semibold">Actuel :</span> {periodCurrent.from?.toLocaleDateString("fr-FR")}
+              {" "}au{" "} {periodCurrent.to?.toLocaleDateString("fr-FR")}
+            </span>
+            <span>
+              <span className="font-semibold">Précédent :</span> {periodPrevious.from?.toLocaleDateString("fr-FR")}
+              {" "}au{" "} {periodPrevious.to?.toLocaleDateString("fr-FR")}
+            </span>
+          </div>
         </CardDescription>
+
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

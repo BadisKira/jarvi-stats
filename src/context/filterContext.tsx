@@ -1,4 +1,4 @@
-import { StatsType } from "@/types/statistiques";
+import { PreDefinedPeriodOptions, StatsType } from "@/types/statistiques";
 import { createContext, useContext, useState, ReactNode } from "react";
 import { DateRange } from "react-day-picker";
 
@@ -6,14 +6,14 @@ import { DateRange } from "react-day-picker";
 interface FilterContextProps {
 
   dateRange: DateRange | undefined;
-  setDateRange: (range: DateRange | undefined) => void;
+  setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>
 
   selectedTypes: StatsType[]
   setSelectedTypes: (type: StatsType[]) => void,
 
 
-  isManuallyCreated: boolean | null,
-  setIsManuallyCreated: (arg: boolean | null) => void;
+  selectedPredefinedPeriod: PreDefinedPeriodOptions,
+  setSelectedPredefinedPeriod: (arg: PreDefinedPeriodOptions) => void;
 
 }
 
@@ -29,12 +29,15 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
     "EMAIL_SENT", "LINKEDIN_INMAIL_SENT", "LINKEDIN_MESSAGE_SENT"
   ]);
 
-  const [isManuallyCreated, setIsManuallyCreated] = useState<boolean | null>(true)
+  const [selectedPredefinedPeriod, setSelectedPredefinedPeriod] = useState(() => {
+    return (localStorage.getItem("period-selected") || "null") as PreDefinedPeriodOptions
+  });
 
   return (
     <FilterContext.Provider value={{
       dateRange, setDateRange,
-      selectedTypes, setSelectedTypes, isManuallyCreated, setIsManuallyCreated
+      selectedTypes, setSelectedTypes,
+      selectedPredefinedPeriod, setSelectedPredefinedPeriod
     }}>
       {children}
     </FilterContext.Provider>

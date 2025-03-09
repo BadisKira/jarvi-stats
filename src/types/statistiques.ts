@@ -1,3 +1,9 @@
+import { ApolloError } from "@apollo/client";
+import { DateRange } from "react-day-picker";
+
+export type PreDefinedPeriodOptions = "null" | "1 day" | "1 week" | "1 month" | "3 months" |"6 months" | "1 year"
+
+
 export type StatsType =
     | "EVENT_SCHEDULED"
     | "EMAIL_SENT"
@@ -26,15 +32,15 @@ export const StatsTypeArray: StatsType[] = Object.keys(StatsTypeEnum) as StatsTy
 
 
 export type StatsRequest = {
-    messageType: [StatsType],
+    messageType: StatsType[],
     startDate: string,
     endDate: string
 }
 
 
 export type BasicStatsData = {
-    nombre_lectures_actuel: number
-    nombre_lectures_precedent: number
+    nombre_manually_created_actuel: number
+    nombre_manually_created_precedent: number
     nombre_messages_actuel: number
     nombre_messages_precedent: number
     nombre_reponses_actuel: number
@@ -42,4 +48,11 @@ export type BasicStatsData = {
     temps_moyen_reponse_actuel: number | null
     temps_moyen_reponse_precedent: number | null
     type: string
+}
+
+export interface SectionStatisticsBasicProps {
+    data: {aggregated_data_3:BasicStatsData[]},
+    loading: boolean,
+    error: ApolloError | undefined,
+    currentPeriod:DateRange,
 }

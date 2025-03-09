@@ -10,17 +10,13 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { BasicStatsData, StatsType } from "@/types/statistiques"
-import { getDisplayName } from "@/lib/utils"
+import { calcPreviousPeriod, convertToHours, getDisplayName } from "@/lib/utils"
+import { DateRange } from "react-day-picker"
 
-type Period = {
-    date_debut?: Date
-    date_fin?: Date
-}
 
 interface StatTableProps {
     data: BasicStatsData
-    periodCurrent: Period
-    periodPrevious: Period
+    periodCurrent: DateRange
 }
 
 function calculateNormalizedDifference(
@@ -35,19 +31,21 @@ function calculateNormalizedDifference(
     return ((avgCurrent - avgPrevious) / avgPrevious) * 100
 }
 
-export function StatTable({ data, periodCurrent, periodPrevious }: StatTableProps) {
+export function StatTable({ data, periodCurrent }: StatTableProps) {
+    const periodPrevious = calcPreviousPeriod(periodCurrent);
+    
     const durationCurrent =
-        periodCurrent.date_debut && periodCurrent.date_fin
-            ? (periodCurrent.date_fin.getTime() - periodCurrent.date_debut.getTime()) / (1000 * 60 * 60 * 24) + 1
+        periodCurrent.from && periodCurrent.to
+            ? (periodCurrent.to.getTime() - periodCurrent.from.getTime()) / (1000 * 60 * 60 * 24) + 1
             : 1
     const durationPrevious =
-        periodPrevious.date_debut && periodPrevious.date_fin
-            ? (periodPrevious.date_fin.getTime() - periodPrevious.date_debut.getTime()) / (1000 * 60 * 60 * 24) + 1
+        periodPrevious.from && periodPrevious.to
+            ? (periodPrevious.to.getTime() - periodPrevious.from.getTime()) / (1000 * 60 * 60 * 24) + 1
             : 1
 
     const metrics = [
         {
-            label: "Messages",
+            label: "Envoyés",
             actuel: data.nombre_messages_actuel,
             precedent: data.nombre_messages_precedent,
         },
@@ -57,14 +55,14 @@ export function StatTable({ data, periodCurrent, periodPrevious }: StatTableProp
             precedent: data.nombre_reponses_precedent,
         },
         {
-            label: "Lectures",
-            actuel: data.nombre_lectures_actuel,
-            precedent: data.nombre_lectures_precedent,
+            label: "Manuellement crée",
+            actuel: data.nombre_manually_created_actuel,
+            precedent: data.nombre_manually_created_precedent,
         },
         {
             label: "Temps moyen de réponse",
-            actuel: data.temps_moyen_reponse_actuel,
-            precedent: data.temps_moyen_reponse_precedent,
+            actuel: convertToHours(data.temps_moyen_reponse_actuel || 0),
+            precedent: convertToHours(data.temps_moyen_reponse_precedent || 0),
         },
     ]
 
@@ -72,9 +70,17 @@ export function StatTable({ data, periodCurrent, periodPrevious }: StatTableProp
         <Card className="mb-6">
             <CardHeader>
                 <CardTitle>{getDisplayName(data.type as StatsType)}</CardTitle>
-                <CardDescription>
-                    Période actuelle : {periodCurrent.date_debut?.toDateString()} au {periodCurrent.date_fin?.toDateString()} <br />
-                    Période précédente : {periodPrevious.date_debut?.toDateString()} au {periodPrevious.date_fin?.toDateString()}
+                <CardDescription className="text-sm text-gray-500">
+                    <div className="flex flex-col space-y-1">
+                        <span>
+                            <span className="font-semibold">Actuel :</span> {periodCurrent.from?.toLocaleDateString("fr-FR")}
+                            {" "}au{" "} {periodCurrent.to?.toLocaleDateString("fr-FR")}
+                        </span>
+                        <span>
+                            <span className="font-semibold">Précédent :</span> {periodPrevious.from?.toLocaleDateString("fr-FR")}
+                            {" "}au{" "} {periodPrevious.to?.toLocaleDateString("fr-FR")}
+                        </span>
+                    </div>
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -127,7 +133,6 @@ export function StatTable({ data, periodCurrent, periodPrevious }: StatTableProp
                             })}
                         </TableBody>
                         <TableCaption>
-                                Comparaison entre deux périodes de temps
                         </TableCaption>
                     </Table>
                 </div>

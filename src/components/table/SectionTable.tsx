@@ -1,13 +1,16 @@
-import { useFilter } from "@/context/filterContext";
-import { getStaticData } from "@/lib/queries";
-import { useQuery } from "@apollo/client";
 import { StatTable } from "./StatistiqueTable";
-import { BasicStatsData } from "@/types/statistiques";
+import { BasicStatsData, SectionStatisticsBasicProps } from "@/types/statistiques";
 import { SkeletonCardTable } from "./SkeletonTable";
+import ErrorComponent from "../error";
 
-export default function SectionTable() {
-    const { dateRange } = useFilter();
-    const { data, loading, error } = useQuery(getStaticData);
+
+
+export default function SectionTable({
+    data, loading, error, currentPeriod
+}: SectionStatisticsBasicProps) {
+    let aggregated_data_3: BasicStatsData[] = [];
+
+
     if (loading) {
         return (
             <div className="grid grid-cols-1 p-4
@@ -16,31 +19,24 @@ export default function SectionTable() {
                 <SkeletonCardTable />
                 <SkeletonCardTable />
             </div>
-
         )
     }
     if (error) {
-        console.log(error)
-        return <div>
-            Une erreur a survenue
-        </div>
+        return <ErrorComponent />
     }
-    console.log(data)
+
+    aggregated_data_3 = data.aggregated_data_3
+
+
+
     return (
         <div className="flex gap-6 flex-wrap">
             {
-                data.aggregated_data_3.map((dd: BasicStatsData) => {
-                    return <StatTable data={dd} periodCurrent={{
-                        date_debut: dateRange?.from,
-                        date_fin: dateRange?.to
-                    }}
-                        periodPrevious={{
-                            date_debut: dateRange?.from,
-                            date_fin: dateRange?.to
-                        }}
-                    />
+                aggregated_data_3.length > 0 && aggregated_data_3.map((dd: BasicStatsData) => {
+                    return <StatTable key={dd.type} data={dd} periodCurrent={currentPeriod} />
                 })
             }
+
         </div>
     )
 }

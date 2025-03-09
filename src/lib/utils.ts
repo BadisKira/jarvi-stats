@@ -46,22 +46,27 @@ export function calcPreviousPeriod(currentPeriod: DateRange) {
 export function getDisplayName(type: StatsType): string {
   switch (type) {
     case "EMAIL_SENT":
-      return "E-mails envoyés";
+      return "E-mails ";
     case "LINKEDIN_MESSAGE_SENT":
-      return "Messages LinkedIn envoyés";
+      return "Messages LinkedIn ";
     case "LINKEDIN_INMAIL_SENT":
-      return "InMails LinkedIn envoyés";
+      return "InMails LinkedIn ";
     case "LINKEDIN_INVITATION_SENT":
-      return "Invitations LinkedIn envoyées";
+      return "Invitations LinkedIn ";
     case "PHONECALL":
       return "Appels téléphoniques";
     case "SMS_SENT":
-      return "SMS envoyés";
+      return "SMS ";
     case "JOB_APPLICATION":
-      return "Candidatures envoyées";
+      return "Candidatures ";
     case "EVENT_SCHEDULED":
       return "Événements programmés";
     default:
       return `Type inconnu: ${type}`; 
   }
+}
+
+export function convertToHours(epoch:number) {
+  var hours = epoch / 3600;
+  return Math.floor(hours) ;
 }
