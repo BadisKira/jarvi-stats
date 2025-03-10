@@ -1,7 +1,7 @@
 import { ApolloError } from "@apollo/client";
 import { DateRange } from "react-day-picker";
 
-export type PreDefinedPeriodOptions = "null" | "1 day" | "1 week" | "1 month" | "3 months" |"6 months" | "1 year"
+export type PreDefinedPeriodOptions = "null" | "1 day" | "1 week" | "1 month" | "3 months" | "6 months" | "1 year"
 
 
 export type StatsType =
@@ -51,8 +51,32 @@ export type BasicStatsData = {
 }
 
 export interface SectionStatisticsBasicProps {
-    data: {aggregated_data_3:BasicStatsData[]},
+    data: { aggregated_data_3: BasicStatsData[] },
     loading: boolean,
     error: ApolloError | undefined,
-    currentPeriod:DateRange,
+    currentPeriod: DateRange,
 }
+
+
+
+// Pour la partie multiple line chart 
+export type SpecificKeys =  "EMAIL_SENT"
+| "LINKEDIN_MESSAGE_SENT"
+| "LINKEDIN_INMAIL_SENT"
+
+export type GroupedMonthData = {
+    nombre_reponses: number;
+    nombre_messages: number;
+    month_number: number;
+    month: string;
+};
+
+export type GroupedDataGQL = {
+    grouped_by_month: GroupedMonthData[];
+};
+
+export type ApiGQLResponse = {
+    EMAIL_SENT: GroupedDataGQL;
+    LINKEDIN_MESSAGE_SENT: GroupedDataGQL;
+    LINKEDIN_INMAIL_SENT: GroupedDataGQL;
+};

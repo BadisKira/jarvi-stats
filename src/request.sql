@@ -31,3 +31,5 @@ FROM (
 ) t
 LEFT JOIN all_data current ON t.type = current.type AND current.period = 'current'
 LEFT JOIN all_data previous ON t.type = previous.type AND previous.period = 'previous';
+
+

@@ -6,6 +6,7 @@ import { useFilter } from "@/context/filterContext";
 import { useQuery } from "@apollo/client";
 import { getStatisticsV1 } from "@/lib/queries";
 import { convertToTimestampz } from "@/lib/utils";
+import { ComparisonChart } from "@/components/charts/multipleBarChart";
 
 export default function StatistiquesTabs() {
     const [activeTab, setActiveTab] = useState(() => {
@@ -26,18 +27,24 @@ export default function StatistiquesTabs() {
     });
 
     return (
-        <Tabs defaultValue="tabs" className="w-full" value={activeTab}
-            onValueChange={setActiveTab}>
-            <TabsList className="w-80">
-                <TabsTrigger value="tabs" >version table</TabsTrigger>
-                <TabsTrigger value="charts"  >version graphique</TabsTrigger>
-            </TabsList>
-            <TabsContent value="tabs">
-                <SectionTable data={data} loading={loading} error={error} currentPeriod={dateRange!!} />
-            </TabsContent>
-            <TabsContent value="charts">
-                <StatisticsSection data={data} loading={loading} error={error} currentPeriod={dateRange!!} />
-            </TabsContent>
-        </Tabs>
+        <>
+            <Tabs defaultValue="tabs" className="w-full" value={activeTab}
+                onValueChange={setActiveTab}>
+                <TabsList className="">
+                <TabsTrigger value="tabs">Version tableau</TabsTrigger>
+                <TabsTrigger value="charts">Version graphique</TabsTrigger>
+                <TabsTrigger value="comparaison">Comparaison par période </TabsTrigger>
+                </TabsList>
+                <TabsContent value="tabs">
+                    <SectionTable data={data} loading={loading} error={error} currentPeriod={dateRange!!} />
+                </TabsContent>
+                <TabsContent value="charts">
+                    <StatisticsSection data={data} loading={loading} error={error} currentPeriod={dateRange!!} />
+                </TabsContent>
+                <TabsContent value="comparaison">
+                    <ComparisonChart data={data} loading={loading} error={error} currentPeriod={dateRange!!} />
+                </TabsContent>
+            </Tabs>
+        </>
     )
 }

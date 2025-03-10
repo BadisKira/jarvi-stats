@@ -1,4 +1,4 @@
-import { StatsRequest } from "@/types/statistiques";
+import { StatsRequest, StatsType } from "@/types/statistiques";
 import { gql } from "@apollo/client";
 export const getHisotyEntriesTypes = gql`
 query getHisotyEntriesTypes {
@@ -32,3 +32,15 @@ query GetStatistiques {
 
 
 
+export const getStatsForYear = ({year,messageType}:{year:number,messageType:StatsType}) => {
+  return gql`
+query MyMultipleQuery {
+  grouped_by_month(args: {year: "${year}", message_type:"${messageType}"}) {
+     nombre_reponses
+    nombre_messages
+    month_number
+    month
+  }
+}
+`
+}
