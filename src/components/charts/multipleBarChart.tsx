@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid,XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 
 import {
   Card,
@@ -69,22 +69,36 @@ export function ComparisonChart({
           </CardHeader>
           <CardContent className="w-full">
             <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
-                <BarChart data={chartData}>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="type"
-                    tickLine={false}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => getDisplayName(value)}
+              <BarChart data={chartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="type"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => getDisplayName(value)}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="dashed" />}
+                />
+                <Bar dataKey="current" fill="var(--color-current)" radius={4} >
+                  <LabelList
+                    position="top"
+                    offset={12}
+                    className="fill-foreground"
+                    fontSize={12}
                   />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dashed" />}
+                </Bar>
+                <Bar dataKey="previous" fill="var(--color-previous)" radius={4} >
+                  <LabelList
+                    position="top"
+                    offset={12}
+                    className="fill-foreground"
+                    fontSize={12}
                   />
-                  <Bar dataKey="current" fill="var(--color-current)" radius={4} />
-                  <Bar dataKey="previous" fill="var(--color-previous)" radius={4} />
-                </BarChart>
+                </Bar>
+              </BarChart>
 
 
             </ChartContainer>

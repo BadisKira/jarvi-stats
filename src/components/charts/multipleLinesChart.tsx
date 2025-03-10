@@ -1,6 +1,5 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
 import {
@@ -37,7 +36,7 @@ const chartConfig = {
     },
     LINKEDIN_INMAIL_SENT: {
         label: "LinkedIn InMails Envoyés",
-        color: "hsl(var(--chart-3))",
+        color: "hsl(var(--chart-5))",
     },
 } satisfies ChartConfig
 
@@ -151,16 +150,14 @@ export function MultipleLinesChart() {
                 </ChartContainer>
             </CardContent>
             <CardFooter>
-                <div className="flex w-full items-start gap-2 text-sm">
-                    <div className="grid gap-2">
-                        <div className="flex items-center gap-2 font-medium leading-none">
-                            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-                        </div>
-                        <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                            Showing message activity for the last 3 months
-                        </div>
-                    </div>
+            <div className="flex w-full  gap-2 text-sm">
+            {Object.entries(chartConfig).map(([key, { label, color }]) => (
+                <div key={key} className="flex gap-2 items-center">
+                    <span className="w-4 h-4 rounded-md" style={{ backgroundColor: color }}></span>
+                    <span className="text-xs font-semibold">{label}</span>
                 </div>
+            ))}
+        </div>
             </CardFooter>
         </Card>
     )

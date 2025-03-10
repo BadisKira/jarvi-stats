@@ -1,5 +1,5 @@
 import {
-  Brain,
+  BarChart3,
   Home,
 } from "lucide-react";
 
@@ -30,7 +30,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupLabel className=" mb-8">
             <Link to="/" className="flex items-center gap-2">
-              <Brain className="h-6 w-6 text-primary" />
+            <BarChart3 className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold text-primary">JarviStats</span>
             </Link>
           </SidebarGroupLabel>

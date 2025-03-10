@@ -29,11 +29,12 @@ import {
     CommandEmpty,
     CommandGroup,
 } from "@/components/ui/command";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Info } from "lucide-react";
 import { useFilter } from "@/context/filterContext";
 import { PreDefinedPeriodOptions, StatsType, StatsTypeArray } from "@/types/statistiques";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { getDisplayName } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
 
 
 
@@ -44,12 +45,12 @@ interface PeriodeSelectProps {
 
 
 function PeriodeSelect({ onPeriodChange }: PeriodeSelectProps) {
-    const {selectedPredefinedPeriod,setSelectedPredefinedPeriod} = useFilter();
+    const { selectedPredefinedPeriod, setSelectedPredefinedPeriod } = useFilter();
 
     const handleValueChange = (value: PreDefinedPeriodOptions) => {
         setSelectedPredefinedPeriod(value);
         localStorage.setItem('period-selected', value);
-        if(value == "null"){
+        if (value == "null") {
             return;
         }
         const to = new Date();
@@ -82,7 +83,14 @@ function PeriodeSelect({ onPeriodChange }: PeriodeSelectProps) {
     };
 
     return (
-        <Select value={selectedPredefinedPeriod} onValueChange={handleValueChange}>
+        <div className="relative">
+            <Label className="absolute -top-5 flex items-center justify-between" title="Selectionn">
+                <span>Selectionner une période précise</span> 
+                <div title="Ce select permet de choisir une periode bien définie à partir de ce jour " className="cursor-pointer">
+                <Info size={16}   className="ml-2"/>
+                </div>
+            </Label>
+            <Select value={selectedPredefinedPeriod} onValueChange={handleValueChange}>
             <SelectTrigger className="w-[250px] " >
                 <SelectValue placeholder="Sélectionnez une période" />
             </SelectTrigger>
@@ -94,6 +102,7 @@ function PeriodeSelect({ onPeriodChange }: PeriodeSelectProps) {
                 ))}
             </SelectContent>
         </Select>
+        </div>
     );
 }
 
@@ -106,10 +115,16 @@ export function SelectStatistiqueTypes() {
 
     const toggleSelection = (value: StatsType) => {
         if (selectedTypes.includes(value)) {
-            if (selectedTypes.length > 1)
-                setSelectedTypes(selectedTypes.filter((item) => item !== value));
+            if (selectedTypes.length > 1) {
+                const selectedTypesUpdated = selectedTypes.filter((item) => item !== value);
+                localStorage.setItem("types-selected", selectedTypesUpdated.join(","))
+                setSelectedTypes(selectedTypesUpdated);
+                setSelectedTypes(selectedTypesUpdated);
+            }
         } else {
-            setSelectedTypes([...selectedTypes, value]);
+            const selectedTypesUpdated = [...selectedTypes, value];
+            localStorage.setItem("types-selected", selectedTypesUpdated.join(","))
+            setSelectedTypes(selectedTypesUpdated);
         }
     };
 
@@ -161,7 +176,7 @@ export default function Filters() {
     return (
         <div className="flex gap-4  items-center mb-2 flex-wrap ">
             <PeriodeSelect onPeriodChange={handlePeriodChange} />
-            <DatePickerWithRange date={dateRange} setDate={setDateRange}  />
+            <DatePickerWithRange date={dateRange} setDate={setDateRange} />
             <SelectStatistiqueTypes />
         </div>
     );

@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp, TrendingDown } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 import {
   Card,
   CardContent,
@@ -95,8 +95,22 @@ export function ChartBar({ data, periodCurrent }: ChartBarProps) {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="actuel" fill="var(--color-actuel)" radius={4} />
-            <Bar dataKey="precedent" fill="var(--color-precedent)" radius={4} />
+            <Bar dataKey="actuel" fill="var(--color-actuel)" radius={4} >
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
+            <Bar dataKey="precedent" fill="var(--color-precedent)" radius={4} >
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>

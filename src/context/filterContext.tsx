@@ -21,16 +21,19 @@ const FilterContext = createContext<FilterContextProps | undefined>(undefined);
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(new Date().setDate(new Date().getDate() - 1)),
-    to: new Date(),
+    from: new Date(new Date().setMonth(new Date().getMonth() - 1)), 
+  to: new Date(), 
   });
 
-  const [selectedTypes, setSelectedTypes] = useState<StatsType[]>([
-    "EMAIL_SENT", "LINKEDIN_INMAIL_SENT", "LINKEDIN_MESSAGE_SENT"
-  ]);
+  const [selectedTypes, setSelectedTypes] = useState<StatsType[]>(() => {
+      return (localStorage.getItem('types-selected')?.split(',') || [
+        "EMAIL_SENT", "LINKEDIN_INMAIL_SENT", "LINKEDIN_MESSAGE_SENT"
+      ]) as StatsType[]
+    }
+  );
 
   const [selectedPredefinedPeriod, setSelectedPredefinedPeriod] = useState(() => {
-    return (localStorage.getItem("period-selected") || "null") as PreDefinedPeriodOptions
+    return (localStorage.getItem("period-selected") || "1 month") as PreDefinedPeriodOptions
   });
 
   return (
